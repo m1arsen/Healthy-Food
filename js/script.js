@@ -99,4 +99,49 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   setClock('.timer', deadline);
+
+   // Modal
+
+   const modal = document.querySelector('.modal');
+   const openBtns = document.querySelectorAll('[data-modal]');
+
+   function openModal() {
+     modal.classList.add('show');
+     modal.classList.remove('hide');
+     document.body.style.overflow = 'hidden';
+
+     clearInterval(modalTimerId);
+   };
+
+   function closeModal() {
+     modal.classList.add('hide');
+     modal.classList.remove('show');
+     document.body.style.overflow = '';
+   };
+
+   openBtns.forEach(btn => {
+     btn.addEventListener('click', openModal)
+   });
+
+   modal.addEventListener('click', (e) => {
+     if(e.target == modal || e.target.getAttribute('data-close') == '') closeModal();
+   });
+
+   document.addEventListener('keydown', (e) => {
+     if(e.code === 'Escape' && modal.classList.contains('show')) closeModal();
+   });
+
+   // Функционал по открыванию модалки после прокрутки
+
+   const modalTimerId = setTimeout(openModal, 50000);
+
+   // function showModalByScroll() {
+   //   if(window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1) {
+   //     openModal();
+   //     window.removeEventListener('scroll', showModalByScroll);
+   //   }
+   // }
+
+   // Скролл выключен, так как он багован
+   // window.addEventListener('scroll', showModalByScroll);
 })
