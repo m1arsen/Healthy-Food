@@ -100,48 +100,109 @@ document.addEventListener('DOMContentLoaded', () => {
 
   setClock('.timer', deadline);
 
-   // Modal
+  // Modal
 
-   const modal = document.querySelector('.modal');
-   const openBtns = document.querySelectorAll('[data-modal]');
+  const modal = document.querySelector('.modal');
+  const openBtns = document.querySelectorAll('[data-modal]');
 
-   function openModal() {
-     modal.classList.add('show');
-     modal.classList.remove('hide');
-     document.body.style.overflow = 'hidden';
+  function openModal() {
+    modal.classList.add('show');
+    modal.classList.remove('hide');
+    document.body.style.overflow = 'hidden';
 
-     clearInterval(modalTimerId);
-   };
+    clearInterval(modalTimerId);
+  };
 
-   function closeModal() {
-     modal.classList.add('hide');
-     modal.classList.remove('show');
-     document.body.style.overflow = '';
-   };
+  function closeModal() {
+    modal.classList.add('hide');
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
+  };
 
-   openBtns.forEach(btn => {
-     btn.addEventListener('click', openModal)
-   });
+  openBtns.forEach(btn => {
+    btn.addEventListener('click', openModal)
+  });
 
-   modal.addEventListener('click', (e) => {
-     if(e.target == modal || e.target.getAttribute('data-close') == '') closeModal();
-   });
+  modal.addEventListener('click', (e) => {
+    if(e.target == modal || e.target.getAttribute('data-close') == '') closeModal();
+  });
 
-   document.addEventListener('keydown', (e) => {
-     if(e.code === 'Escape' && modal.classList.contains('show')) closeModal();
-   });
+  document.addEventListener('keydown', (e) => {
+    if(e.code === 'Escape' && modal.classList.contains('show')) closeModal();
+  });
 
-   // Функционал по открыванию модалки после прокрутки
+  // Функционал по открыванию модалки после прокрутки
 
-   const modalTimerId = setTimeout(openModal, 50000);
+  const modalTimerId = setTimeout(openModal, 50000);
 
-   // function showModalByScroll() {
-   //   if(window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1) {
-   //     openModal();
-   //     window.removeEventListener('scroll', showModalByScroll);
-   //   }
-   // }
+  // function showModalByScroll() {
+  //   if(window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1) {
+  //     openModal();
+  //     window.removeEventListener('scroll', showModalByScroll);
+  //   }
+  // }
 
-   // Скролл выключен, так как он багован
-   // window.addEventListener('scroll', showModalByScroll);
+  // Скролл выключен, так как он багован
+  // window.addEventListener('scroll', showModalByScroll);
+
+  // Карточки с классами
+
+  class MenuCard {
+    constructor(src, alt, title, descr, price, parentSelector, ...classes) {
+      this.src = src;
+      this.alt = alt;
+      this.title = title;
+      this.descr = descr;
+      this.price = price;
+      this.classes = classes;
+      this.parent = document.querySelector(parentSelector);
+      this.transfer = 27;
+      this.changeToUAH();
+    }
+
+    changeToUAH() {
+      this.price = this.price * this.transfer;
+    }
+
+    render() {
+      const element = document.createElement('div');
+
+      if (this.classes.length === 0) {
+        this.classes = "menu__item";
+        element.classList.add(this.classes);
+      } else {
+          this.classes.forEach(className => element.classList.add(className));
+      }
+
+      element.innerHTML = `
+        <img src=${this.src} alt=${this.alt}>
+        <h3 class="menu__item-subtitle">${this.title}</h3>
+        <div class="menu__item-descr">${this.descr}</div>
+        <div class="menu__item-divider"></div>
+        <div class="menu__item-price">
+            <div class="menu__item-cost">Цена:</div>
+            <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
+        </div>
+      `;
+
+      this.parent.append(element);
+    }
+  }
+
+  const getResource = async (url) => {
+    let res = await fetch(url);
+
+    if(!res.ok) {
+      throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+    }
+
+    return await res.json();
+  };
+
+  axios.get('http://localhost:3000/menu')
+  .then(({data}) => {
+    data.forEach(({img, altimg, title, descr, price}) => {
+      new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
+    })
+  });
 })
