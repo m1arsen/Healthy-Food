@@ -1,23 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
   // Табы
   const tabs = document.querySelectorAll('.tabheader__item'),
-        tabsContent = document.querySelectorAll('.tabcontent'),
-        tabsParent = document.querySelector('.tabheader__items');
+    tabsContent = document.querySelectorAll('.tabcontent'),
+    tabsParent = document.querySelector('.tabheader__items');
 
   function hideTabContent() {
-    tabsContent.forEach(item => {
+    tabsContent.forEach((item) => {
       item.classList.add('hide');
       item.classList.remove('show', 'fade');
-    })
+    });
 
-    tabs.forEach(item => {
+    tabs.forEach((item) => {
       item.classList.remove('tabheader__item_active');
-    })
+    });
   }
 
   function showTabContent(i = 0) {
-    tabsContent[i].classList.add('show', 'fade')
-    tabsContent[i].classList.remove('hide')
+    tabsContent[i].classList.add('show', 'fade');
+    tabsContent[i].classList.remove('hide');
     tabs[i].classList.add('tabheader__item_active');
   }
 
@@ -27,15 +27,15 @@ document.addEventListener('DOMContentLoaded', () => {
   tabsParent.addEventListener('click', (e) => {
     const target = e.target;
 
-    if(target && target.classList.contains('tabheader__item')) {
+    if (target && target.classList.contains('tabheader__item')) {
       tabs.forEach((item, i) => {
-        if(target == item) {
+        if (target == item) {
           hideTabContent();
           showTabContent(i);
         }
-      })
+      });
     }
-  })
+  });
 
   // Таймер
 
@@ -46,25 +46,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const t = Date.parse(endtime) - Date.parse(new Date());
 
-    if(t <= 0) {
+    if (t <= 0) {
       days = 0;
       hours = 0;
       minutes = 0;
       seconds = 0;
     } else {
-      days = Math.floor(t / (1000 * 60 * 60 * 24)),
-      hours = Math.floor((t / (1000 * 60 * 60)) % 24),
-      minutes = Math.floor((t / (1000 * 60)) % 60),
-      seconds = Math.floor((t / 1000) % 60);
+      (days = Math.floor(t / (1000 * 60 * 60 * 24))),
+        (hours = Math.floor((t / (1000 * 60 * 60)) % 24)),
+        (minutes = Math.floor((t / (1000 * 60)) % 60)),
+        (seconds = Math.floor((t / 1000) % 60));
     }
 
     return {
-      'total': t,
+      total: t,
       days,
       hours,
       minutes,
-      seconds
-    }
+      seconds,
+    };
   }
 
   function getZero(num) {
@@ -77,10 +77,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function setClock(selector, endtime) {
     const timer = document.querySelector(selector),
-          days = timer.querySelector('#days'),
-          hours = timer.querySelector('#hours'),
-          minutes = timer.querySelector('#minutes'),
-          seconds = timer.querySelector('#seconds');
+      days = timer.querySelector('#days'),
+      hours = timer.querySelector('#hours'),
+      minutes = timer.querySelector('#minutes'),
+      seconds = timer.querySelector('#seconds');
 
     const timeInterval = setInterval(updateClock, 1000);
 
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
       minutes.textContent = getZero(t.minutes);
       seconds.textContent = getZero(t.seconds);
 
-      if(t.total <= 0) clearInterval(timeInterval);
+      if (t.total <= 0) clearInterval(timeInterval);
     }
   }
 
@@ -111,24 +111,24 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.overflow = 'hidden';
 
     clearInterval(modalTimerId);
-  };
+  }
 
   function closeModal() {
     modal.classList.add('hide');
     modal.classList.remove('show');
     document.body.style.overflow = '';
-  };
+  }
 
-  openBtns.forEach(btn => {
-    btn.addEventListener('click', openModal)
+  openBtns.forEach((btn) => {
+    btn.addEventListener('click', openModal);
   });
 
   modal.addEventListener('click', (e) => {
-    if(e.target == modal || e.target.getAttribute('data-close') == '') closeModal();
+    if (e.target == modal || e.target.getAttribute('data-close') == '') closeModal();
   });
 
   document.addEventListener('keydown', (e) => {
-    if(e.code === 'Escape' && modal.classList.contains('show')) closeModal();
+    if (e.code === 'Escape' && modal.classList.contains('show')) closeModal();
   });
 
   // Функционал по открыванию модалки после прокрутки
@@ -168,10 +168,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const element = document.createElement('div');
 
       if (this.classes.length === 0) {
-        this.classes = "menu__item";
+        this.classes = 'menu__item';
         element.classList.add(this.classes);
       } else {
-          this.classes.forEach(className => element.classList.add(className));
+        this.classes.forEach((className) => element.classList.add(className));
       }
 
       element.innerHTML = `
@@ -192,18 +192,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const getResource = async (url) => {
     let res = await fetch(url);
 
-    if(!res.ok) {
+    if (!res.ok) {
       throw new Error(`Could not fetch ${url}, status: ${res.status}`);
     }
 
     return await res.json();
   };
 
-  axios.get('http://localhost:3000/menu')
-  .then(({data}) => {
-    data.forEach(({img, altimg, title, descr, price}) => {
+  axios.get('http://localhost:3000/menu').then(({ data }) => {
+    data.forEach(({ img, altimg, title, descr, price }) => {
       new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
-    })
+    });
   });
 
   // Forms
@@ -213,20 +212,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const message = {
     loading: 'img/form/spinner.svg',
     success: 'Спасибо! Скоро мы с вами свяжемся!',
-    error: 'Что-то пошло не так'
-  }
+    error: 'Что-то пошло не так',
+  };
 
-  forms.forEach(item => {
+  forms.forEach((item) => {
     bindPostData(item);
   });
 
   const postData = async (url, data) => {
     let res = await fetch(url, {
-      method: "POST",
+      method: 'POST',
       headers: {
-          'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: data
+      body: data,
     });
 
     return await res.json();
@@ -247,19 +246,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const formData = new FormData(form);
 
-      const json = JSON.stringify(Object.fromEntries(formData.entries()))
+      const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
       postData('http://localhost:3000/requests', json)
-      .then(data => {
-        console.log(data);
-        showThanksModal(message.success);
-        statusMessage.remove();
-      }).catch(() => {
-        showThanksModal(message.error);
-      }).finally(() => {
-        form.reset();
-      })
-    })
+        .then((data) => {
+          console.log(data);
+          showThanksModal(message.success);
+          statusMessage.remove();
+        })
+        .catch(() => {
+          showThanksModal(message.error);
+        })
+        .finally(() => {
+          form.reset();
+        });
+    });
   }
 
   // спиннер и замена содержимого модалки после отправки данных
@@ -280,10 +281,10 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     document.querySelector('.modal').append(thanksModal);
     setTimeout(() => {
-        thanksModal.remove();
-        prevModalDialog.classList.add('show');
-        prevModalDialog.classList.remove('hide');
-        closeModal();
+      thanksModal.remove();
+      prevModalDialog.classList.add('show');
+      prevModalDialog.classList.remove('hide');
+      closeModal();
     }, 4000);
   }
 
@@ -292,38 +293,38 @@ document.addEventListener('DOMContentLoaded', () => {
   let offset = 0;
   let slideIndex = 1;
 
-  const slides = document.querySelectorAll(".offer__slide"),
-        slider = document.querySelector('.offer__slider'),
-        prev = document.querySelector(".offer__slider-prev"),
-        next = document.querySelector(".offer__slider-next"),
-        total = document.querySelector("#total"),
-        current = document.querySelector("#current"),
-        slidesWrapper = document.querySelector(".offer__slider-wrapper"),
-        width = window.getComputedStyle(slidesWrapper).width,
-        slidesField = document.querySelector(".offer__slider-inner");
+  const slides = document.querySelectorAll('.offer__slide'),
+    slider = document.querySelector('.offer__slider'),
+    prev = document.querySelector('.offer__slider-prev'),
+    next = document.querySelector('.offer__slider-next'),
+    total = document.querySelector('#total'),
+    current = document.querySelector('#current'),
+    slidesWrapper = document.querySelector('.offer__slider-wrapper'),
+    width = window.getComputedStyle(slidesWrapper).width,
+    slidesField = document.querySelector('.offer__slider-inner');
 
-	if (slides.length < 10) {
-		total.textContent = `0${slides.length}`;
-		current.textContent = `0${slideIndex}`;
-	} else {
-		total.textContent = slides.length;
-		current.textContent = slideIndex;
-	}
+  if (slides.length < 10) {
+    total.textContent = `0${slides.length}`;
+    current.textContent = `0${slideIndex}`;
+  } else {
+    total.textContent = slides.length;
+    current.textContent = slideIndex;
+  }
 
-	slidesField.style.width = 100 * slides.length + "%";
-	slidesField.style.display = "flex";
-	slidesField.style.transition = "0.5s all";
+  slidesField.style.width = 100 * slides.length + '%';
+  slidesField.style.display = 'flex';
+  slidesField.style.transition = '0.5s all';
 
-	slidesWrapper.style.overflow = "hidden";
+  slidesWrapper.style.overflow = 'hidden';
 
-	slides.forEach((slide) => {
-		slide.style.width = width;
-	});
+  slides.forEach((slide) => {
+    slide.style.width = width;
+  });
 
   slider.style.position = 'relative';
 
   const indicators = document.createElement('ol'),
-        dots = [];
+    dots = [];
   indicators.classList.add('carousel-indicators');
   // indicators.style.cssText = `
   //     position: absolute;
@@ -339,7 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // `;
   slider.append(indicators);
 
-  for(let i = 0; i < slides.length; i++) {
+  for (let i = 0; i < slides.length; i++) {
     const dot = document.createElement('li');
     dot.setAttribute('data-slide-to', i + 1);
     // dot.classList.add('.dot');
@@ -358,70 +359,70 @@ document.addEventListener('DOMContentLoaded', () => {
       opacity: .5;
       transition: opacity .6s ease;
     `;
-    if(i == 0) {
+    if (i == 0) {
       dot.style.opacity = 1;
     }
     indicators.append(dot);
     dots.push(dot);
   }
 
-	next.addEventListener("click", () => {
-		if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) {
-			offset = 0;
-		} else {
-			offset += +width.slice(0, width.length - 2);
-		}
+  next.addEventListener('click', () => {
+    if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) {
+      offset = 0;
+    } else {
+      offset += +width.slice(0, width.length - 2);
+    }
 
-		slidesField.style.transform = `translateX(-${offset}px)`;
+    slidesField.style.transform = `translateX(-${offset}px)`;
 
-		if (slideIndex == slides.length) {
-			slideIndex = 1;
-		} else {
-			slideIndex++;
-		}
+    if (slideIndex == slides.length) {
+      slideIndex = 1;
+    } else {
+      slideIndex++;
+    }
 
-		if (slides.length < 10) {
-			current.textContent = `0${slideIndex}`;
-		} else {
-			current.textContent = slideIndex;
-		}
+    if (slides.length < 10) {
+      current.textContent = `0${slideIndex}`;
+    } else {
+      current.textContent = slideIndex;
+    }
 
-    dots.forEach(dot => dot.style.opacity = '.5');
+    dots.forEach((dot) => (dot.style.opacity = '.5'));
     dots[slideIndex - 1].style.opacity = 1;
-	});
+  });
 
-	prev.addEventListener("click", () => {
-		if (offset == 0) {
-			offset = +width.slice(0, width.length - 2) * (slides.length - 1);
-		} else {
-			offset -= +width.slice(0, width.length - 2);
-		}
+  prev.addEventListener('click', () => {
+    if (offset == 0) {
+      offset = +width.slice(0, width.length - 2) * (slides.length - 1);
+    } else {
+      offset -= +width.slice(0, width.length - 2);
+    }
 
-		slidesField.style.transform = `translateX(-${offset}px)`;
+    slidesField.style.transform = `translateX(-${offset}px)`;
 
-		if (slideIndex == 1) {
-			slideIndex = slides.length;
-		} else {
-			slideIndex--;
-		}
+    if (slideIndex == 1) {
+      slideIndex = slides.length;
+    } else {
+      slideIndex--;
+    }
 
-		if (slides.length < 10) {
-			current.textContent = `0${slideIndex}`;
-		} else {
-			current.textContent = slideIndex;
-		}
+    if (slides.length < 10) {
+      current.textContent = `0${slideIndex}`;
+    } else {
+      current.textContent = slideIndex;
+    }
 
-    dots.forEach(dot => dot.style.opacity = '.5');
+    dots.forEach((dot) => (dot.style.opacity = '.5'));
     dots[slideIndex - 1].style.opacity = 1;
-	});
+  });
 
-  dots.forEach(dot => {
+  dots.forEach((dot) => {
     dot.addEventListener('click', (e) => {
       const slideTo = e.target.getAttribute('data-slide-to');
 
       slideIndex = slideTo;
       offset = +width.slice(0, width.length - 2) * (slideTo - 1);
-  		slidesField.style.transform = `translateX(-${offset}px)`;
+      slidesField.style.transform = `translateX(-${offset}px)`;
 
       if (slides.length < 10) {
         current.textContent = `0${slideIndex}`;
@@ -429,8 +430,115 @@ document.addEventListener('DOMContentLoaded', () => {
         current.textContent = slideIndex;
       }
 
-      dots.forEach(dot => dot.style.opacity = '.5');
+      dots.forEach((dot) => (dot.style.opacity = '.5'));
       dots[slideIndex - 1].style.opacity = 1;
-    })
-  })
-})
+    });
+  });
+
+  // Calculator
+
+  const result = document.querySelector('.calculating__result span');
+
+  let sex, height, weight, age, ratio;
+
+  if (localStorage.getItem('sex')) {
+    sex = localStorage.getItem('sex');
+  } else {
+    sex = 'female';
+    localStorage.setItem('sex', 'female');
+  }
+
+  if (localStorage.getItem('ratio')) {
+    ratio = localStorage.getItem('ratio');
+  } else {
+    ratio = 1.375;
+    localStorage.setItem('ratio', 1.375);
+  }
+
+  function calcTotal() {
+    if (!sex || !height || !weight || !age || !ratio) {
+      result.textContent = '____';
+      return;
+    }
+    if (sex === 'female') {
+      result.textContent = Math.round((447.6 + 9.2 * weight + 3.1 * height - 4.3 * age) * ratio);
+    } else {
+      result.textContent = Math.round((88.36 + 13.4 * weight + 4.8 * height - 5.7 * age) * ratio);
+    }
+  }
+
+  calcTotal();
+
+  function initLocalSettings(selector, activeClass) {
+    const elements = document.querySelectorAll(selector);
+
+    elements.forEach((elem) => {
+      elem.classList.remove(activeClass);
+      if (elem.getAttribute('id') === localStorage.getItem('sex')) {
+        elem.classList.add(activeClass);
+      }
+      if (elem.getAttribute('data-ratio') === localStorage.getItem('ratio')) {
+        elem.classList.add(activeClass);
+      }
+    });
+  }
+
+  initLocalSettings('#gender div', 'calculating__choose-item_active');
+  initLocalSettings('.calculating__choose_big div', 'calculating__choose-item_active');
+
+  function getStaticInformation(selector, activeClass) {
+    const elements = document.querySelectorAll(selector);
+
+    elements.forEach((elem) => {
+      elem.addEventListener('click', (e) => {
+        if (e.target.getAttribute('data-ratio')) {
+          ratio = +e.target.getAttribute('data-ratio');
+          localStorage.setItem('ratio', +e.target.getAttribute('data-ratio'));
+        } else {
+          sex = e.target.getAttribute('id');
+          localStorage.setItem('sex', e.target.getAttribute('id'));
+        }
+
+        elements.forEach((elem) => {
+          elem.classList.remove(activeClass);
+        });
+
+        e.target.classList.add(activeClass);
+
+        calcTotal();
+      });
+    });
+  }
+
+  getStaticInformation('#gender div', 'calculating__choose-item_active');
+  getStaticInformation('.calculating__choose_big div', 'calculating__choose-item_active');
+
+  function getDynamicInformation(selector) {
+    const input = document.querySelector(selector);
+
+    input.addEventListener('input', () => {
+      if (input.value.match(/\D/g)) {
+        input.style.border = '1px solid red';
+      } else {
+        input.style.border = 'none';
+      }
+      switch (input.getAttribute('id')) {
+        case 'height':
+          height = +input.value;
+          break;
+        case 'weight':
+          weight = +input.value;
+          break;
+        case 'age':
+          age = +input.value;
+          break;
+      }
+
+      calcTotal();
+    });
+  }
+
+  getDynamicInformation('#height');
+  getDynamicInformation('#weight');
+  getDynamicInformation('#age');
+});
